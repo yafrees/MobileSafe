@@ -1,34 +1,54 @@
 package com.yafrees.mobilesafe;
 
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+/**
+ * 启动页面
+ * 1.显示Logo
+ * 2.判断是否有网络
+ * 3.升级
+ * 4.判断是否有sdcard
+ * 5.是否合法
+ * 6.延迟进入主界面
+ * */
 
 public class SplashActivity extends Activity {
+
+	private TextView tv_splash_version;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
+
+		tv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
+
+		//动态得到清单文件中的版本号，并显示在启动页面上
+		tv_splash_version.setText("版本名：" + getVersionName());
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.splash, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+	/**
+	 * 得到版本名称
+	 * */
+	private String getVersionName(){
+		//包管理器
+		PackageManager pm = getPackageManager();
+		try {
+			//得到清单 文件信息
+			PackageInfo packageInfo = pm.getPackageInfo(getPackageName(), 0);
+			return packageInfo.versionName;
+		} catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
 		}
-		return super.onOptionsItemSelected(item);
 	}
+
 }
