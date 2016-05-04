@@ -111,14 +111,14 @@ public class SplashActivity extends Activity {
 
 		//软件的升级
 		checkVersion();
-		
+
 		//动画效果
 		//启动页面的渐变动画效果
 		AlphaAnimation aa = new AlphaAnimation(0.1f, 1.0f);
 		aa.setDuration(1000);
-		
+
 		findViewById(R.id.rl_splash_root).startAnimation(aa);
-		
+
 	}
 
 	//	*******************************************************************************
