@@ -8,7 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.yafrees.mobilesafe.activity.HomeActivity;
 import com.yafrees.mobilesafe.utils.StreamTools;
 import android.app.Activity;
@@ -24,8 +23,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 import net.tsz.afinal.FinalHttp;
@@ -110,7 +111,14 @@ public class SplashActivity extends Activity {
 
 		//软件的升级
 		checkVersion();
-
+		
+		//动画效果
+		//启动页面的渐变动画效果
+		AlphaAnimation aa = new AlphaAnimation(0.1f, 1.0f);
+		aa.setDuration(1000);
+		
+		findViewById(R.id.rl_splash_root).startAnimation(aa);
+		
 	}
 
 	//	*******************************************************************************
@@ -157,7 +165,7 @@ public class SplashActivity extends Activity {
 						@Override
 						public void onSuccess(File t) {
 							super.onSuccess(t);
-//							Toast.makeText(getApplicationContext(), "下载成功...", 0).show();
+							//							Toast.makeText(getApplicationContext(), "下载成功...", 0).show();
 							installAPK(t);
 						}
 
@@ -202,6 +210,8 @@ public class SplashActivity extends Activity {
 				//请求网络得到我们最新的版本信息
 
 				Message msg = Message.obtain();
+
+				long startTime = System.currentTimeMillis();
 
 				try {
 					URL url = new URL(getString(R.string.serverurl));
@@ -252,6 +262,11 @@ public class SplashActivity extends Activity {
 					msg.what = JSON_ERROR;
 				}
 				finally {
+					long endTime = System.currentTimeMillis();
+					long dTime = endTime - startTime;//计算启动界面到主界面的耗时
+					if (dTime < 2000) {//如何耗时小于2秒，则执行够2秒后在在进入主界面
+						SystemClock.sleep(2000 - dTime);
+					}
 					handler.sendMessage(msg);
 				}
 			};
