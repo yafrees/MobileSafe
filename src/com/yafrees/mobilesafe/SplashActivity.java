@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -122,10 +123,21 @@ public class SplashActivity extends Activity {
 	}
 
 	//	*******************************************************************************
+	
 	//弹出软件升级对话框
 	protected void showUpdateDialog() {
-		AlertDialog.Builder builder = new Builder(this);
+		AlertDialog.Builder builder = new Builder(SplashActivity.this);
 		builder.setTitle("提示");
+//		builder.setCancelable(false);//强制升级，只能点击对话框中的按钮，除非重要更新，否则不用
+		//取消监听，点击对话框外部，退出对话框，进入主界面
+		builder.setOnCancelListener(new OnCancelListener() {
+			
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				dialog.dismiss();
+				enterHome();
+			}
+		});
 		builder.setMessage(description);
 		builder.setNegativeButton("下次再说", new DialogInterface.OnClickListener() {
 			//跳到主页面
@@ -165,11 +177,11 @@ public class SplashActivity extends Activity {
 						@Override
 						public void onSuccess(File t) {
 							super.onSuccess(t);
-							//							Toast.makeText(getApplicationContext(), "下载成功...", 0).show();
+//							Toast.makeText(getApplicationContext(), "下载成功...", 0).show();
 							installAPK(t);
 						}
 
-						//安装Apk
+						//安装Apk，下载后自动启动安装界面
 						private void installAPK(File t) {
 							// TODO Auto-generated method stub
 							Intent intent = new Intent();
@@ -274,8 +286,9 @@ public class SplashActivity extends Activity {
 	}
 
 	//********************************************************************************
+	
 	/**
-	 * 得到版本名称
+	 * 得到清单文件中的版本名称
 	 * */
 	private String getVersionName(){
 		//包管理器
