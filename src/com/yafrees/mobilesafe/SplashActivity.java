@@ -16,6 +16,7 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -55,6 +56,8 @@ public class SplashActivity extends Activity {
 
 	private TextView tv_splash_version;
 	private TextView tv_splash_updateinfo;
+
+	private SharedPreferences sp;
 
 	/**
 	 * 升级的描述信息
@@ -101,6 +104,7 @@ public class SplashActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		sp = getSharedPreferences("config", MODE_PRIVATE);
 		setContentView(R.layout.activity_splash);
 
 		tv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
@@ -109,9 +113,22 @@ public class SplashActivity extends Activity {
 		//动态得到清单文件中的版本号，并显示在启动页面的TextView中
 		tv_splash_version.setText("版本名：" + getVersionName());
 
+		//根据设置页面中的设置状态，判断是否弹出更新对话框
+		if(sp.getBoolean("update", false)){
+			//软件的升级
+			checkVersion();
+		}
+		else {
+			//如果不升级
+			//延迟两秒进入主页面
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					enterHome();
+				}
+			}, 2000);
+		};
 
-		//软件的升级
-		checkVersion();
 
 		//动画效果
 		//启动页面的渐变动画效果
@@ -123,15 +140,15 @@ public class SplashActivity extends Activity {
 	}
 
 	//	*******************************************************************************
-	
+
 	//弹出软件升级对话框
 	protected void showUpdateDialog() {
 		AlertDialog.Builder builder = new Builder(SplashActivity.this);
 		builder.setTitle("提示");
-//		builder.setCancelable(false);//强制升级，只能点击对话框中的按钮，除非重要更新，否则不用
+		//		builder.setCancelable(false);//强制升级，只能点击对话框中的按钮，除非重要更新，否则不用
 		//取消监听，点击对话框外部，退出对话框，进入主界面
 		builder.setOnCancelListener(new OnCancelListener() {
-			
+
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				dialog.dismiss();
@@ -177,7 +194,7 @@ public class SplashActivity extends Activity {
 						@Override
 						public void onSuccess(File t) {
 							super.onSuccess(t);
-//							Toast.makeText(getApplicationContext(), "下载成功...", 0).show();
+							//							Toast.makeText(getApplicationContext(), "下载成功...", 0).show();
 							installAPK(t);
 						}
 
@@ -286,7 +303,7 @@ public class SplashActivity extends Activity {
 	}
 
 	//********************************************************************************
-	
+
 	/**
 	 * 得到清单文件中的版本名称
 	 * */

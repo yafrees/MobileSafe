@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 /**
- * 自定义控件，实现主页面走字幕的效果
+ * 自定义控件，获得焦点，实现主页面走字幕的效果
  * */
 
 public class FocusedTextView extends TextView{
@@ -24,7 +24,7 @@ public class FocusedTextView extends TextView{
 	public FocusedTextView(Context context) {
 		super(context);
 	}
-	
+
 	//当前控件不一定获得焦点，
 	@Override
 	public boolean isFocused() {
