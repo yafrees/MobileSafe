@@ -146,6 +146,8 @@ public class HomeActivity extends Activity {
 					//点击确定，对话框取消，进入手机防盗界面
 					dialog.dismiss();
 					Log.e(TAG, "密码正确，进入手机防盗页面");
+					Intent intent = new Intent(HomeActivity.this ,LostAndFind.class );
+					startActivity(intent);
 				}
 				else {
 					//
@@ -200,6 +202,8 @@ public class HomeActivity extends Activity {
 
 					dialog.dismiss();
 					Log.e(TAG, "保存密码，进入手机防盗页面");
+					Intent intent = new Intent(HomeActivity.this ,LostAndFind.class );
+					startActivity(intent);
 				}
 				else {
 					//
