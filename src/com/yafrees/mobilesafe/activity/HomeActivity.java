@@ -5,6 +5,7 @@ package com.yafrees.mobilesafe.activity;
  * */
 
 import com.yafrees.mobilesafe.R;
+import com.yafrees.mobilesafe.utils.MD5Utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,6 +28,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import net.tsz.afinal.utils.Utils;
 
 public class HomeActivity extends Activity {
 	protected static final String TAG = "HomeActivity";
@@ -131,7 +133,7 @@ public class HomeActivity extends Activity {
 			public void onClick(View v) {
 				//1得到输入框的密码
 				String password = et_password.getText().toString().trim();
-				String password_save = sp.getString("password", "");
+				String password_save = sp.getString("password", "");//已经加密的密文
 
 				//2判断密码是否为空
 				if (TextUtils.isEmpty(password)) {
@@ -140,13 +142,14 @@ public class HomeActivity extends Activity {
 				}
 
 				//3判断两个密码是否相同，不相同提示
-				if (password.equals(password_save)) {
-					//对话框取消
+				if (MD5Utils.ecoder(password).equals(password_save)) {
+					//点击确定，对话框取消，进入手机防盗界面
 					dialog.dismiss();
 					Log.e(TAG, "密码正确，进入手机防盗页面");
 				}
 				else {
 					//
+					et_password.setText("");
 					Toast.makeText(HomeActivity.this, "您输入的密码不正确", 0).show();
 				}
 			}
@@ -192,7 +195,7 @@ public class HomeActivity extends Activity {
 				if (password.equals(password_confirm)) {
 					//4保存密码，进入手机防盗页面
 					Editor editor = sp.edit();
-					editor.putString("password", password);
+					editor.putString("password", MD5Utils.ecoder(password));//保存的为加密后的密文
 					editor.commit();
 
 					dialog.dismiss();
@@ -200,6 +203,8 @@ public class HomeActivity extends Activity {
 				}
 				else {
 					//
+					et_password.setText("");
+					et_password_confirm.setText("");
 					Toast.makeText(HomeActivity.this, "两次输入的密码不一致", 0).show();
 				}
 			}
