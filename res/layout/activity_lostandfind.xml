@@ -80,6 +80,7 @@
     <!-- ***************************************************** -->
 
     <TextView
+        android:background="@drawable/shape_selector"
         android:onClick="reEnterSetting"
         android:clickable="true"
         android:layout_width="match_parent"
