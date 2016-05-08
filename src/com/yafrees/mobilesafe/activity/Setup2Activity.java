@@ -2,7 +2,6 @@ package com.yafrees.mobilesafe.activity;
 
 import com.yafrees.mobilesafe.R;
 import com.yafrees.mobilesafe.view.SettingItemView;
-
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;

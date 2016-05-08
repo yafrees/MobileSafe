@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -33,6 +34,12 @@
         <activity android:name="com.yafrees.mobilesafe.activity.Setup2Activity" />
         <activity android:name="com.yafrees.mobilesafe.activity.Setup3Activity" />
         <activity android:name="com.yafrees.mobilesafe.activity.Setup4Activity" />
+
+        <receiver android:name="com.yafrees.mobilesafe.receiver.BootCompleteReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
