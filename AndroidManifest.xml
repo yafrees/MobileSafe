@@ -29,6 +29,9 @@
         <activity android:name="com.yafrees.mobilesafe.activity.SettingActivity" />
         <activity android:name="com.yafrees.mobilesafe.activity.LostAndFind" />
         <activity android:name="com.yafrees.mobilesafe.activity.Setup1Activity" />
+        <activity android:name="com.yafrees.mobilesafe.activity.Setup2Activity" />
+        <activity android:name="com.yafrees.mobilesafe.activity.Setup3Activity" />
+        <activity android:name="com.yafrees.mobilesafe.activity.Setup4Activity" />
     </application>
 
 </manifest>
