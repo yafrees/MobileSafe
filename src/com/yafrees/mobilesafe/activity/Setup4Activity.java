@@ -12,7 +12,7 @@ import android.view.View;
 public class Setup4Activity extends Activity {
 
 	private SharedPreferences sp;
-	
+
 	/**
 	 * 手机防盗的向导界面-----第四页
 	 * */
@@ -32,6 +32,9 @@ public class Setup4Activity extends Activity {
 		Intent intent = new Intent(this , LostAndFind.class);
 		startActivity(intent);
 		finish();
+
+		//设置向导界面切换的动画
+		overridePendingTransition(R.anim.tran_next_in, R.anim.tran_next_out);
 	}
 
 	//上一步按钮的点击事件
@@ -39,6 +42,9 @@ public class Setup4Activity extends Activity {
 		Intent intent = new Intent(this , Setup3Activity.class);
 		startActivity(intent);
 		finish();
+
+		//设置向导界面切换的动画
+		overridePendingTransition(R.anim.tran_pre_in, R.anim.tran_pre_out);
 	}
 
 }

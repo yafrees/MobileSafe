@@ -24,6 +24,9 @@ public class Setup2Activity extends Activity {
 		Intent intent = new Intent(this , Setup3Activity.class);
 		startActivity(intent);
 		finish();
+		//设置向导界面切换的动画
+		overridePendingTransition(R.anim.tran_next_in, R.anim.tran_next_out);
+
 	}
 
 	//上一步按钮的点击事件
@@ -31,6 +34,9 @@ public class Setup2Activity extends Activity {
 		Intent intent = new Intent(this , Setup1Activity.class);
 		startActivity(intent);
 		finish();
+
+		//设置向导界面切换的动画
+		overridePendingTransition(R.anim.tran_pre_in, R.anim.tran_pre_out);
 	}
 
 }
