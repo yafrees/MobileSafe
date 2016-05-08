@@ -1,6 +1,7 @@
 package com.yafrees.mobilesafe.activity;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -19,11 +20,15 @@ public abstract class BaseSetupActivity extends Activity {
 
 	//1.定义手势识别器，实现设置向导界面的滑动切换
 	private GestureDetector detector;
+	
+	//定义一个
+	protected SharedPreferences sp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		sp = getSharedPreferences("config", MODE_PRIVATE);
 		
 		
 

@@ -25,16 +25,25 @@ public class Setup4Activity extends BaseSetupActivity {
 	}
 
 
-
-	//完成按钮的点击事件
-	@Override
-	public void showNext() {
+	public void next(View view){
 		Editor editor = sp.edit();
 		editor.putBoolean("configed", true);
 		editor.commit();
 		Intent intent = new Intent(this , LostAndFind.class);
 		startActivity(intent);
-		finish();		
+		finish();
+
+	}
+
+		//完成按钮的点击事件
+	@Override
+	public void showNext() {
+//		Editor editor = sp.edit();
+//		editor.putBoolean("configed", true);
+//		editor.commit();
+//		Intent intent = new Intent(this , LostAndFind.class);
+//		startActivity(intent);
+//		finish();		
 	}
 
 	//上一步按钮的点击事件
