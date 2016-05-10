@@ -140,6 +140,6 @@
     <TextView
         style="@style/text_content_style"
         android:drawableLeft="@android:drawable/star_big_on"
-        android:text="远程锁屏：#locksreen#" />
+        android:text="远程锁屏：#lockscreen#" />
 
 </LinearLayout>
