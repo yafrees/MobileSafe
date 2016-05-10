@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,6 +23,14 @@ import android.widget.SimpleAdapter;
 public class SelectContactActivity extends Activity {
 
 	private ListView lv_select_contact;
+	private  List<Map<String, String>> data;
+
+	private Handler handler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			lv_select_contact.setAdapter(new SimpleAdapter(SelectContactActivity.this, data , R.layout.select_item , 
+					new String [] {"name" , "number"}, new int []{R.id.tv_name , R.id.tv_number}));
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +39,10 @@ public class SelectContactActivity extends Activity {
 		setContentView(R.layout.activity_select_contact);
 
 		lv_select_contact = (ListView) findViewById(R.id.lv_select_contact);
-		final List<Map<String, String>> data = getAllContacts();
-		lv_select_contact.setAdapter(new SimpleAdapter(this, data , R.layout.select_item , 
-				new String [] {"name" , "number"}, new int []{R.id.tv_name , R.id.tv_number}));
-		
+
+		fillData();
+
+
 		lv_select_contact.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -48,6 +57,19 @@ public class SelectContactActivity extends Activity {
 			}
 		});
 
+	}
+	//***********************************************************
+	/**
+	 * º”‘ÿ ˝æ›
+	 * */
+	private void fillData() {
+		new Thread(){
+			public void run() {
+
+				data = getAllContacts();
+				handler.sendEmptyMessage(0);
+			};
+		}.start();
 	}
 
 	//***********************************************************************************
@@ -68,7 +90,7 @@ public class SelectContactActivity extends Activity {
 				while(datacursor.moveToNext()){
 					String data1 = datacursor.getString(0);
 					String mimetype = datacursor.getString(1);
-					
+
 					System.out.println("data1£∫" + data1);
 					System.out.println("mimetype£∫" + mimetype);
 
@@ -83,13 +105,16 @@ public class SelectContactActivity extends Activity {
 
 				}
 				datacursor.close();
-				maps.add(map);
+				
+				if (map.get("name") != null && map.get("number") != null) {
+					maps.add(map);
+				}
 
 			}
 		}
 
 		return maps;
 	}
-//	********************************************************
+	//	********************************************************
 
 }
