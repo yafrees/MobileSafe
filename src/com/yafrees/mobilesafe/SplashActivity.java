@@ -180,6 +180,8 @@ public class SplashActivity extends Activity {
 							super.onFailure(t, errorNo, strMsg);
 							t.printStackTrace();
 							Toast.makeText(getApplicationContext(), "下载失败！", 0).show();
+							//下载失败后进入主页面
+							enterHome();
 						}
 
 						//下载到SDCard需要权限

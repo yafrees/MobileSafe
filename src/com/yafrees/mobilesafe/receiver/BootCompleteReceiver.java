@@ -22,7 +22,7 @@ public class BootCompleteReceiver extends BroadcastReceiver{
 	public void onReceive(Context context, Intent intent) {
 		//1.得到之前的sim卡信息
 		sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
-		String save_sim = sp.getString("sim", "") + "yafrees";
+		String save_sim = sp.getString("sim", "");
 
 		//2.得到当前手机的sim卡信息
 		tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);

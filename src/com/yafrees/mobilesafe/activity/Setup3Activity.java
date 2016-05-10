@@ -79,10 +79,10 @@ public class Setup3Activity extends BaseSetupActivity {
 			// TODO Auto-generated method stub
 			super.onActivityResult(requestCode, resultCode, data);
 
-			if (data == null) {
+			if (data == null) 
 				return;
-			}
-			String number = data.getStringExtra("number").replace("-", "").trim();
+			
+			String number = data.getStringExtra("number").replace("-", "");
 			et_safenumber.setText(number);
 			
 		}

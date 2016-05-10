@@ -31,7 +31,7 @@ public class SelectContactActivity extends Activity {
 
 		lv_select_contact = (ListView) findViewById(R.id.lv_select_contact);
 		final List<Map<String, String>> data = getAllContacts();
-		lv_select_contact.setAdapter(new SimpleAdapter(this, data,R.layout.select_item , 
+		lv_select_contact.setAdapter(new SimpleAdapter(this, data , R.layout.select_item , 
 				new String [] {"name" , "number"}, new int []{R.id.tv_name , R.id.tv_number}));
 		
 		lv_select_contact.setOnItemClickListener(new OnItemClickListener() {
@@ -64,10 +64,11 @@ public class SelectContactActivity extends Activity {
 			if (contact_id != null) {
 				Map<String, String> map = new HashMap<String, String>();
 
-				Cursor datacursor = resolver.query(data_uri, new String []{"data1" , "mimetype"}, "raw_contact_id = ?", new String []{contact_id}, null);
+				Cursor datacursor = resolver.query(data_uri, new String []{"data1" , "mimetype"}, "contact_id = ?", new String []{contact_id}, null);
 				while(datacursor.moveToNext()){
 					String data1 = datacursor.getString(0);
 					String mimetype = datacursor.getString(1);
+					
 					System.out.println("data1£º" + data1);
 					System.out.println("mimetype£º" + mimetype);
 
