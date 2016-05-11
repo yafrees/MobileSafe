@@ -5,7 +5,9 @@ import com.yafrees.mobilesafe.db.dao.NumberAddressQueryDao;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +27,28 @@ public class NumberAddressQueryActivity extends Activity{
 
 		et_number = (EditText) findViewById(R.id.et_number);
 		tv_result = (TextView) findViewById(R.id.tv_result);
+
+		//监听文本框文字改变的时候回调
+		et_number.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if (s == null) {
+					tv_result.setText("");
+				}
+				if (s != null && s.length() >= 3) {
+					String address = NumberAddressQueryDao.getAddress(s.toString());
+					tv_result.setText(address);
+				}
+
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
 	}
 
 	//点击事件----查询电话号码归属地
@@ -40,7 +64,7 @@ public class NumberAddressQueryActivity extends Activity{
 			//3.开始查询归属地----网络查询或者本地数据库查询
 			String address = NumberAddressQueryDao.getAddress(number);
 			tv_result.setText(address);
-			
+
 			System.out.println("您要查询的电话号码：" + number);
 		}
 
