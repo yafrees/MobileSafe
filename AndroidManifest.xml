@@ -41,6 +41,8 @@
         <activity android:name="com.yafrees.mobilesafe.activity.Setup4Activity" />
         <activity android:name="com.yafrees.mobilesafe.activity.SelectContactActivity" />
         <activity android:name="com.yafrees.mobilesafe.activity.LockScreenActivity" />
+        <activity android:name="com.yafrees.mobilesafe.activity.AToolsActivity" />
+        <activity android:name="com.yafrees.mobilesafe.activity.NumberAddressQueryActivity" />
 
         <receiver android:name="com.yafrees.mobilesafe.receiver.BootCompleteReceiver" >
             <intent-filter>

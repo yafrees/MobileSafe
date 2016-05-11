@@ -34,7 +34,6 @@ public class LockScreenActivity extends Activity {
 		if (dpm.isAdminActive(who)) {
 			dpm.lockNow();//锁屏
 			//dpm.resetPassword("1472", 0);//设置密码
-
 			//dpm.wipeData(0);//恢复成出厂设置 --- 远程删除数据
 			//dpm.wipeData(DevicePolicyManager.WIPE_EXTERNAL_STORAGE);//SDCard格式化
 		}else {

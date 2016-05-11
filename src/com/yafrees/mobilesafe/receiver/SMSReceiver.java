@@ -3,14 +3,12 @@ package com.yafrees.mobilesafe.receiver;
 import com.yafrees.mobilesafe.R;
 import com.yafrees.mobilesafe.activity.LockScreenActivity;
 import com.yafrees.mobilesafe.service.GPSService;
-
 import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.media.MediaPlayer;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -101,7 +99,6 @@ public class SMSReceiver extends BroadcastReceiver {
 				}
 			}
 		}
-
 	}
 
 }

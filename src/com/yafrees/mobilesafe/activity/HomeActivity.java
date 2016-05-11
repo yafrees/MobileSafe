@@ -81,13 +81,21 @@ public class HomeActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			
+				Intent intent;
+
 				switch (position) {
 				case 0://进入手机防盗
 					showLostFindDialog();
 					break;
 
+				case 7://高级工具
+					intent =new Intent(HomeActivity.this , AToolsActivity.class);
+					startActivity(intent);
+					break;
+
 				case 8://进入设置中心
-					Intent intent = new Intent(HomeActivity.this , SettingActivity.class);
+					intent = new Intent(HomeActivity.this , SettingActivity.class);
 					startActivity(intent);
 					break;
 
@@ -99,9 +107,9 @@ public class HomeActivity extends Activity {
 
 	}
 	//**********************************************************************
-	
+
 	private AlertDialog dialog;
-	
+
 	//进入手机防盗界面弹出密码对话框
 	//根据当前情况弹出不同的对话框。
 	//当密码已经设置则，弹出登录对话框
