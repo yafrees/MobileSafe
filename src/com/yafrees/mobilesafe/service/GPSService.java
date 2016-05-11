@@ -43,9 +43,9 @@ public class GPSService extends Service{
 		listener = new MyLocationListener();
 		//设置条件
 		Criteria criteria = new Criteria();
-		criteria.setAccuracy(Criteria.ACCURACY_FINE);//设置精确度
-		lm.getBestProvider(criteria , true);
-		lm.requestLocationUpdates("gps", 0, 0, listener);
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);//设置精确度为最精准
+		String provider = lm.getBestProvider(criteria , true);
+		lm.requestLocationUpdates(provider, 0, 0, listener);
 	}
 
 	@Override

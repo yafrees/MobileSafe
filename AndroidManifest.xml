@@ -40,6 +40,7 @@
         <activity android:name="com.yafrees.mobilesafe.activity.Setup3Activity" />
         <activity android:name="com.yafrees.mobilesafe.activity.Setup4Activity" />
         <activity android:name="com.yafrees.mobilesafe.activity.SelectContactActivity" />
+        <activity android:name="com.yafrees.mobilesafe.activity.LockScreenActivity" />
 
         <receiver android:name="com.yafrees.mobilesafe.receiver.BootCompleteReceiver" >
             <intent-filter>
@@ -49,6 +50,19 @@
         <receiver android:name="com.yafrees.mobilesafe.receiver.SMSReceiver" >
             <intent-filter android:priority="1000" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.yafrees.mobilesafe.receiver.MyAdmin"
+            android:description="@string/sample_device_admin_description"
+            android:label="@string/sample_device_admin"
+            android:permission="android.permission.BIND_DEVICE_ADMIN" >
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin_sample" />
+
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
 

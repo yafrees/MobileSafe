@@ -1,9 +1,12 @@
 package com.yafrees.mobilesafe.receiver;
 
 import com.yafrees.mobilesafe.R;
+import com.yafrees.mobilesafe.activity.LockScreenActivity;
 import com.yafrees.mobilesafe.service.GPSService;
 
+import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,9 +24,13 @@ public class SMSReceiver extends BroadcastReceiver {
 
 	SharedPreferences sp;
 
+	private DevicePolicyManager dpm;
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		sp = context.getSharedPreferences("config",Context.MODE_PRIVATE);
+
+		dpm = (DevicePolicyManager) context.getSystemService(Context.DEVICE_POLICY_SERVICE);
 
 		Object [] pdus = (Object[]) intent.getExtras().get("pdus");
 		for (Object pdu : pdus) {
@@ -64,11 +71,32 @@ public class SMSReceiver extends BroadcastReceiver {
 				else if ("#wipedata#".equals(body)) {
 					//远程删除数据
 					System.out.println("远程删除数据");
+					ComponentName who = new ComponentName(context, MyAdmin.class);
+					if (dpm.isAdminActive(who)) {
+						dpm.wipeData(0);//远程删除数据
+					}
+					else {
+						Intent openAdmin = new Intent(context , LockScreenActivity.class);
+						//广播接收者不能通过意图直接启动活动，和服务。
+						openAdmin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						context.startActivity(openAdmin);
+					}
 					abortBroadcast();
 				}
 				else if ("#lockscreen#".equals(body)) {
 					//远程锁屏
 					System.out.println("远程锁屏");
+					ComponentName who = new ComponentName(context, MyAdmin.class);
+					if (dpm.isAdminActive(who)) {
+						dpm.lockNow();//远程锁屏
+						dpm.resetPassword("1472s", 0);//设置锁屏密码
+					}
+					else {
+						Intent openAdmin = new Intent(context , LockScreenActivity.class);
+						//广播接收者不能通过意图直接启动活动，和服务。
+						openAdmin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						context.startActivity(openAdmin);
+					}
 					abortBroadcast();
 				}
 			}
