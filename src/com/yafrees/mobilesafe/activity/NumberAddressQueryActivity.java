@@ -1,6 +1,7 @@
 package com.yafrees.mobilesafe.activity;
 
 import com.yafrees.mobilesafe.R;
+import com.yafrees.mobilesafe.db.dao.NumberAddressQueryDao;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -37,6 +38,9 @@ public class NumberAddressQueryActivity extends Activity{
 		}
 		else {
 			//3.开始查询归属地----网络查询或者本地数据库查询
+			String address = NumberAddressQueryDao.getAddress(number);
+			tv_result.setText(address);
+			
 			System.out.println("您要查询的电话号码：" + number);
 		}
 

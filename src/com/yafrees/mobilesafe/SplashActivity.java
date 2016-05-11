@@ -1,6 +1,7 @@
 package com.yafrees.mobilesafe;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -42,6 +43,7 @@ import net.tsz.afinal.http.AjaxCallBack;
  * 4.判断是否有sdcard
  * 5.是否合法
  * 6.延迟进入主界面
+ * 6.拷贝数据库
  * */
 
 public class SplashActivity extends Activity {
@@ -113,6 +115,9 @@ public class SplashActivity extends Activity {
 		//动态得到清单文件中的版本号，并显示在启动页面的TextView中
 		tv_splash_version.setText("版本名：" + getVersionName());
 
+		//
+		copyDB();
+
 		//根据设置页面中的设置状态，判断是否弹出更新对话框
 		if(sp.getBoolean("update", false)){
 			//软件的升级
@@ -137,6 +142,30 @@ public class SplashActivity extends Activity {
 
 		findViewById(R.id.rl_splash_root).startAnimation(aa);
 
+	}
+	//	***********************************************************************
+	//把assets目录下的address.db拷贝到/data/data/com.yafrees.mobilesafe/files/address.db
+	private void copyDB() {
+		File file = new File(getFilesDir() , "address.db");
+		if (file.exists() && file.length() > 0) {
+			System.out.println("数据库已经存在，不需要重复拷贝");
+		}
+		else {
+			try {
+				InputStream is = getAssets().open("address.db");
+				FileOutputStream fos = new FileOutputStream(file);
+				int len = 0;
+				byte [] buffer = new byte[1024];
+				while((len = is.read(buffer)) != -1){
+					fos.write(buffer , 0 , len);
+				}
+				is.close();
+				fos.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	//	*******************************************************************************
