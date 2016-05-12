@@ -70,6 +70,7 @@
         </receiver>
 
         <service android:name="com.yafrees.mobilesafe.service.GPSService" />
+        <service android:name="com.yafrees.mobilesafe.service.AddressService" />
     </application>
 
 </manifest>

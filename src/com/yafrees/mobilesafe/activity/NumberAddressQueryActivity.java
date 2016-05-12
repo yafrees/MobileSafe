@@ -66,6 +66,7 @@ public class NumberAddressQueryActivity extends Activity{
 		//2.判断是否为空
 		if (TextUtils.isEmpty(number)) {
 			Toast.makeText(getApplicationContext(), "电话号码不能为空", 0).show();
+			
 			//号码为空的时候，文本框抖动的动画效果
 			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
 			et_number.startAnimation(shake);
