@@ -5,10 +5,13 @@ import com.yafrees.mobilesafe.db.dao.NumberAddressQueryDao;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +20,9 @@ public class NumberAddressQueryActivity extends Activity{
 
 	private EditText et_number;
 	private TextView tv_result;
+	
+	//震动服务
+	private Vibrator vibrator;
 
 
 	@Override
@@ -27,6 +33,8 @@ public class NumberAddressQueryActivity extends Activity{
 
 		et_number = (EditText) findViewById(R.id.et_number);
 		tv_result = (TextView) findViewById(R.id.tv_result);
+		
+		vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
 		//监听文本框文字改变的时候回调
 		et_number.addTextChangedListener(new TextWatcher() {
@@ -57,8 +65,17 @@ public class NumberAddressQueryActivity extends Activity{
 		String number = et_number.getText().toString().trim();
 		//2.判断是否为空
 		if (TextUtils.isEmpty(number)) {
-			//
 			Toast.makeText(getApplicationContext(), "电话号码不能为空", 0).show();
+			//号码为空的时候，文本框抖动的动画效果
+			Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+			et_number.startAnimation(shake);
+			
+			//手机震动效果
+//			vibrator.vibrate(2000);//震动两秒
+			
+			long pattern [] = {500,500,1000,1000};
+			vibrator.vibrate(pattern, -1);
+			
 		}
 		else {
 			//3.开始查询归属地----网络查询或者本地数据库查询
