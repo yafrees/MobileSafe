@@ -7,10 +7,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.widget.Toast;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 /**
  * 监听来电
@@ -25,6 +28,11 @@ public class AddressService extends Service{
 
 	private OutCallReceiver receiver;
 	
+	//窗口服务
+	private WindowManager wm;
+	
+	private TextView view;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -33,6 +41,9 @@ public class AddressService extends Service{
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+		wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+		
 		tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 		
 		listener = new MyPhoneStateListener();
@@ -53,7 +64,7 @@ public class AddressService extends Service{
 		public void onReceive(Context context, Intent intent) {
 			String number = getResultData();
 			String address = NumberAddressQueryDao.getAddress(number);
-			Toast.makeText(context, address, Toast.LENGTH_LONG).show();
+			myToast(address);
 		}
 
 	}
@@ -72,7 +83,14 @@ public class AddressService extends Service{
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING://来电---铃声响起
 				String address = NumberAddressQueryDao.getAddress(incomingNumber);
-				Toast.makeText(getApplicationContext(), address, 1).show();
+//				Toast.makeText(getApplicationContext(), address, 1).show();
+				myToast(address);
+				break;
+			case TelephonyManager.CALL_STATE_IDLE://电话挂断了
+				if (view != null) {
+					wm.removeView(view);
+					view = null;
+				}
 				break;
 
 			default:
@@ -93,5 +111,30 @@ public class AddressService extends Service{
 		unregisterReceiver(receiver);
 		receiver = null;
 	}
+	
+//************************************************************
+	/**
+	 * 自定义Toast
+	 * */
+	public void myToast(String address) {
+		view = new TextView(this);
+		view.setTextSize(18);
+		view.setTextColor(Color.GREEN);
+		view.setText(address);
+		
+		WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+		params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.format = PixelFormat.TRANSLUCENT;
+        params.type = WindowManager.LayoutParams.TYPE_TOAST;
+        params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                /*| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE*/;
+		
+		
+		wm.addView(view, params);
+		
+	}
+
 
 }
