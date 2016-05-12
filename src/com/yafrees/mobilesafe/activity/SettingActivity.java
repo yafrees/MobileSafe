@@ -72,7 +72,7 @@ public class SettingActivity extends Activity {
 			}
 		});
 
-//************************************************************************
+		//************************************************************************
 		//设置号码归属地自动显示
 		siv_show_address = (SettingItemView) findViewById(R.id.siv_show_address);
 		addressIntent = new Intent(this , AddressService.class);
@@ -86,7 +86,7 @@ public class SettingActivity extends Activity {
 		}
 
 		//等同于if...else...
-//		siv_show_address.setChecked(addressService);
+		//		siv_show_address.setChecked(addressService);
 
 		siv_show_address.setOnClickListener(new OnClickListener() {
 
@@ -107,6 +107,24 @@ public class SettingActivity extends Activity {
 			}
 		});
 
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		//校验服务是否开启
+		boolean addressService = ServiceStateUtils.isRunningService(this, "com.yafrees.mobilesafe.service.AddressService");
+		if (addressService) {
+			siv_show_address.setChecked(true);
+		}
+		else {
+			siv_show_address.setChecked(false);
+		}
+
+		//等同于if...else...
+		//siv_show_address.setChecked(addressService);
 	}
 
 

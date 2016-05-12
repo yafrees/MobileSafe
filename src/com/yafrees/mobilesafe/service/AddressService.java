@@ -3,7 +3,10 @@ package com.yafrees.mobilesafe.service;
 import com.yafrees.mobilesafe.db.dao.NumberAddressQueryDao;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -20,6 +23,8 @@ public class AddressService extends Service{
 	
 	private MyPhoneStateListener listener;
 
+	private OutCallReceiver receiver;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -32,7 +37,27 @@ public class AddressService extends Service{
 		
 		listener = new MyPhoneStateListener();
 		tm.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
+		
+		//注册监听去电-----广播接收者的动态注册
+		receiver = new OutCallReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.intent.action.NEW_OUTGOING_CALL");//监听去电的动作
+		registerReceiver(receiver, filter);
+		
 	}
+//*******************************************************************************
+	//服务里面的内部类，---监听去电
+	public class OutCallReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String number = getResultData();
+			String address = NumberAddressQueryDao.getAddress(number);
+			Toast.makeText(context, address, Toast.LENGTH_LONG).show();
+		}
+
+	}
+//**************************************************************************************
 
 	private class MyPhoneStateListener extends PhoneStateListener{
 
@@ -63,6 +88,10 @@ public class AddressService extends Service{
 		//取消监听来电
 		tm.listen(listener, PhoneStateListener.LISTEN_NONE);
 		listener = null;
+		
+		//取消注册监听去电
+		unregisterReceiver(receiver);
+		receiver = null;
 	}
 
 }

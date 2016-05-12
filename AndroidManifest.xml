@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
     <application
         android:allowBackup="true"
@@ -71,6 +72,13 @@
 
         <service android:name="com.yafrees.mobilesafe.service.GPSService" />
         <service android:name="com.yafrees.mobilesafe.service.AddressService" />
+
+        <!-- 在代码中AddressService.class,动态注册 -->
+        <!-- <receiver android:name="com.yafrees.mobilesafe.receiver.OutCallReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver> -->
     </application>
 
 </manifest>
