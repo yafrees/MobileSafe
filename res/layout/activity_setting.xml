@@ -21,7 +21,7 @@
         mobilesafesetting:title="设置自动更新"
         mobilesafesetting:update_off="自动更新已关闭"
         mobilesafesetting:update_on="自动更新已开启" />
-    
+
     <com.yafrees.mobilesafe.view.SettingItemView
         android:id="@+id/siv_show_address"
         android:layout_width="wrap_content"
@@ -29,5 +29,10 @@
         mobilesafesetting:title="设置来电归属地显示"
         mobilesafesetting:update_off="归属地显示已关闭"
         mobilesafesetting:update_on="归属地显示已开启" />
+
+    <com.yafrees.mobilesafe.view.SettingClickView
+        android:id="@+id/scv_change_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

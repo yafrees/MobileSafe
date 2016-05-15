@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
@@ -34,6 +35,9 @@ public class AddressService extends Service{
 	
 	private View view;
 	
+	//
+	private SharedPreferences sp;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -42,6 +46,7 @@ public class AddressService extends Service{
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		sp = getSharedPreferences("config", MODE_PRIVATE);
 		
 		wm = (WindowManager) getSystemService(WINDOW_SERVICE);
 		
@@ -122,10 +127,18 @@ public class AddressService extends Service{
 //		view.setTextSize(18);
 //		view.setTextColor(Color.GREEN);
 //		view.setText(address);
+		
 		view = View.inflate(this, R.layout.show_address, null);
 		TextView tv = (TextView) view.findViewById(R.id.tv_address);
-		
 		tv.setText(address);
+		
+		int which_choice = sp.getInt("which", 0);
+//		{"半透明" , "活力橙" , "卫士蓝" , "金属灰" , "苹果绿"};
+		int ids [] = {R.drawable.call_locate_white , R.drawable.call_locate_orange , R.drawable.call_locate_blue , 
+				R.drawable.call_locate_gray , R.drawable.call_locate_green};
+		//根据设置中心的设置值，动态设置自定义Toast的背景
+		view.setBackgroundResource(ids[which_choice]);
+		
 		
 		WindowManager.LayoutParams params = new WindowManager.LayoutParams();
 		params.height = WindowManager.LayoutParams.WRAP_CONTENT;

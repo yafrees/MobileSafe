@@ -3,9 +3,13 @@ package com.yafrees.mobilesafe.activity;
 import com.yafrees.mobilesafe.R;
 import com.yafrees.mobilesafe.service.AddressService;
 import com.yafrees.mobilesafe.service.ServiceStateUtils;
+import com.yafrees.mobilesafe.view.SettingClickView;
 import com.yafrees.mobilesafe.view.SettingItemView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -24,6 +28,10 @@ public class SettingActivity extends Activity {
 
 	//开启服务的意图----来电查询号码归属地
 	private Intent addressIntent;
+	
+	//设置自定义Toast的背景颜色
+	private SettingClickView scv_change_bg;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,9 +114,43 @@ public class SettingActivity extends Activity {
 				}
 			}
 		});
+		
+//**************************************************************************
+		//设置自定义Toast的背景颜色
+		scv_change_bg = (SettingClickView) findViewById(R.id.scv_change_bg);
+		final String items [] = {"半透明" , "活力橙" , "卫士蓝" , "金属灰" , "苹果绿"};
+		int which = sp.getInt("which", 0);
+		scv_change_bg.setDescription(items[which]);
+		scv_change_bg.setTitle("归属地提示框风格");
+		scv_change_bg.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				int which_choice = sp.getInt("which", 0);
+				AlertDialog.Builder builder = new Builder(SettingActivity.this);
+				builder.setTitle("归属地提示框风格");
+				builder.setSingleChoiceItems(items, which_choice, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						//保存起来
+						Editor editor = sp.edit();
+						editor.putInt("which", which);
+						editor.commit();
+						//设置描述信息
+						scv_change_bg.setDescription(items[which]);
+						
+						dialog.dismiss();
+					}
+				});
+				builder.setNegativeButton("取消", null);
+				builder.show();
+			}
+		});
 
 	}
-
+//*****************************************************************
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub

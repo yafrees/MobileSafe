@@ -45,6 +45,7 @@
         <activity android:name="com.yafrees.mobilesafe.activity.LockScreenActivity" />
         <activity android:name="com.yafrees.mobilesafe.activity.AToolsActivity" />
         <activity android:name="com.yafrees.mobilesafe.activity.NumberAddressQueryActivity" />
+        <activity android:name="com.yafrees.mobilesafe.view.SettingClickView" />
 
         <receiver android:name="com.yafrees.mobilesafe.receiver.BootCompleteReceiver" >
             <intent-filter>
@@ -74,11 +75,13 @@
         <service android:name="com.yafrees.mobilesafe.service.AddressService" />
 
         <!-- 在代码中AddressService.class,动态注册 -->
-        <!-- <receiver android:name="com.yafrees.mobilesafe.receiver.OutCallReceiver" >
+        <!--
+        <receiver android:name="com.yafrees.mobilesafe.receiver.OutCallReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
-        </receiver> -->
+        </receiver>
+        -->
     </application>
 
 </manifest>
