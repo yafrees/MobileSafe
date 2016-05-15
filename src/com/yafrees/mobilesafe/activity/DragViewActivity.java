@@ -15,6 +15,7 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
 
 public class DragViewActivity extends Activity{
 
@@ -28,6 +29,8 @@ public class DragViewActivity extends Activity{
 	private WindowManager wm;
 	private int mWidth;
 	private int mHeight;
+	
+	private TextView tv_bottom , tv_top;
 
 
 	@Override
@@ -45,10 +48,27 @@ public class DragViewActivity extends Activity{
 
 		iv_drag_view = (ImageView) findViewById(R.id.iv_drag_view);
 		
+		tv_top = (TextView) findViewById(R.id.tv_top);
+		tv_bottom = (TextView) findViewById(R.id.tv_bottom);
+		
 		//取得已经保存的左上角的坐标位置，并移动到保存的位置
 		int lastX = sp.getInt("lastX", 0);
 		int lastY = sp.getInt("lastY", 0);
 		Log.e(TAG, "取出保存的值(" + lastX + "," + lastY + ")");
+//		*****************************************************************
+		//当控件被拖动到屏幕上半部分的时候，顶部文本框隐藏，底部文本框显示
+		if (lastY > mHeight / 2) {
+			//当前控件在下半部分
+			tv_top.setVisibility(View.VISIBLE);
+			tv_bottom.setVisibility(View.INVISIBLE);
+		}
+		else {
+			//当前控件在上半部分
+			tv_top.setVisibility(View.INVISIBLE);
+			tv_bottom.setVisibility(View.VISIBLE);
+		}
+//	***************************************************************	
+		
 //		iv_drag_view.layout(lastX, lastY,
 //				lastX + iv_drag_view.getWidth(), lastY + iv_drag_view.getHeight());
 		Log.e(TAG, "可移动控件的宽和高(" + iv_drag_view.getWidth() + "," + iv_drag_view.getHeight() + ")");
@@ -94,8 +114,21 @@ public class DragViewActivity extends Activity{
 					}
 					
 //	*******************************************************************
+					//当控件被拖动到屏幕上半部分的时候，顶部文本框隐藏，底部文本框显示
+					if (newT > mHeight / 2) {
+						//当前控件在下半部分
+						tv_top.setVisibility(View.VISIBLE);
+						tv_bottom.setVisibility(View.INVISIBLE);
+					}
+					else {
+						//当前控件在上半部分
+						tv_top.setVisibility(View.INVISIBLE);
+						tv_bottom.setVisibility(View.VISIBLE);
+					}
+//**************************************************************************
 					//4.计算偏移量，更新控件的位置
 					iv_drag_view.layout(newL , newT , newR , newB);
+					
 					//5.重新记录坐标
 					startX = event.getRawX();
 					startY = event.getRawY();
