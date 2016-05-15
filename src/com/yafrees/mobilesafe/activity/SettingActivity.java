@@ -29,8 +29,11 @@ public class SettingActivity extends Activity {
 	//开启服务的意图----来电查询号码归属地
 	private Intent addressIntent;
 	
-	//设置自定义Toast的背景颜色
+	//设置自定义Toast(号码归属地显示框)的背景颜色
 	private SettingClickView scv_change_bg;
+	
+	//设置号码归属地显示框的位置
+	private SettingClickView scv_change_position;
 	
 
 	@Override
@@ -146,6 +149,21 @@ public class SettingActivity extends Activity {
 				});
 				builder.setNegativeButton("取消", null);
 				builder.show();
+			}
+		});
+		
+//**********************************************************************
+		//设置号码归属地显示框的位置
+		scv_change_position = (SettingClickView) findViewById(R.id.scv_change_position);
+		scv_change_position.setTitle("归属地提示框位置");
+		scv_change_position.setDescription("设置归属地提示框显示位置");
+		scv_change_position.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				//跳转到拖动的Activity
+				Intent intent = new Intent(SettingActivity.this , DragViewActivity.class);
+				startActivity(intent);
 			}
 		});
 

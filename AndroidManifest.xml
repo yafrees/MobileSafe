@@ -46,6 +46,7 @@
         <activity android:name="com.yafrees.mobilesafe.activity.AToolsActivity" />
         <activity android:name="com.yafrees.mobilesafe.activity.NumberAddressQueryActivity" />
         <activity android:name="com.yafrees.mobilesafe.view.SettingClickView" />
+        <activity android:name="com.yafrees.mobilesafe.activity.DragViewActivity" />
 
         <receiver android:name="com.yafrees.mobilesafe.receiver.BootCompleteReceiver" >
             <intent-filter>
@@ -80,7 +81,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
-        </receiver>
+        </receiver>
         -->
     </application>
 
