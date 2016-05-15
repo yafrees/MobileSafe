@@ -1,5 +1,7 @@
 package com.yafrees.mobilesafe.activity;
 
+import java.lang.reflect.Field;
+
 import com.yafrees.mobilesafe.R;
 
 import android.app.Activity;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -20,12 +23,23 @@ public class DragViewActivity extends Activity{
 	private SharedPreferences sp;
 	
 	private ImageView iv_drag_view;
+	
+	//得到屏幕的宽度
+	private WindowManager wm;
+	private int mWidth;
+	private int mHeight;
 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
+		//获取屏幕的高和宽
+		wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+		mWidth = wm.getDefaultDisplay().getWidth();
+		mHeight = wm.getDefaultDisplay().getHeight();
+		
 		sp = getSharedPreferences("config", MODE_PRIVATE);
 		setContentView(R.layout.activity_drag_view);
 
@@ -69,10 +83,19 @@ public class DragViewActivity extends Activity{
 					int dY = (int) (newY - startY);
 					Log.e(TAG, "移动的偏移量(" + dX + "," + dY + ")");
 
-					//4.计算偏移量，更新控件的位置
-					iv_drag_view.layout(iv_drag_view.getLeft() + dX, iv_drag_view.getTop() + dY,
-							iv_drag_view.getRight() + dX, iv_drag_view.getBottom() + dY);
+//	******************************************************************				
+					//屏蔽非法拖动
+					int newL = iv_drag_view.getLeft() + dX;
+					int newT = iv_drag_view.getTop() + dY;
+					int newR = iv_drag_view.getRight() + dX;
+					int newB = iv_drag_view.getBottom() + dY;
+					if (newL < 0 || newT < 0 || newR > mWidth || newB > mHeight - getStatusBarHeight()) {
+						break;
+					}
 					
+//	*******************************************************************
+					//4.计算偏移量，更新控件的位置
+					iv_drag_view.layout(newL , newT , newR , newB);
 					//5.重新记录坐标
 					startX = event.getRawX();
 					startY = event.getRawY();
@@ -100,4 +123,24 @@ public class DragViewActivity extends Activity{
 			}
 		});
 	}
+	
+//**************************************************************
+	//获取状态栏的高度
+	private int statusBarHeight;
+	private int getStatusBarHeight(){
+		if (statusBarHeight == 0) {
+			try {
+				Class c = Class.forName("com.android.internal.R$dimen");
+				Object o = c.newInstance();
+				Field field = c.getField("status_bar_height");
+				int x = (Integer) field.get(o);
+				statusBarHeight = getResources().getDimensionPixelSize(x);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return statusBarHeight;
+	}
+	
+	
 }
