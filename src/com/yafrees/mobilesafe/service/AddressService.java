@@ -1,7 +1,7 @@
 package com.yafrees.mobilesafe.service;
 
+import com.yafrees.mobilesafe.R;
 import com.yafrees.mobilesafe.db.dao.NumberAddressQueryDao;
-
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ public class AddressService extends Service{
 	//窗口服务
 	private WindowManager wm;
 	
-	private TextView view;
+	private View view;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -117,10 +118,14 @@ public class AddressService extends Service{
 	 * 自定义Toast
 	 * */
 	public void myToast(String address) {
-		view = new TextView(this);
-		view.setTextSize(18);
-		view.setTextColor(Color.GREEN);
-		view.setText(address);
+//		view = new TextView(this);
+//		view.setTextSize(18);
+//		view.setTextColor(Color.GREEN);
+//		view.setText(address);
+		view = View.inflate(this, R.layout.show_address, null);
+		TextView tv = (TextView) view.findViewById(R.id.tv_address);
+		
+		tv.setText(address);
 		
 		WindowManager.LayoutParams params = new WindowManager.LayoutParams();
 		params.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -130,7 +135,6 @@ public class AddressService extends Service{
         params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 /*| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE*/;
-		
 		
 		wm.addView(view, params);
 		
