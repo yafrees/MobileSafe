@@ -8,9 +8,11 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -31,6 +33,9 @@ public class DragViewActivity extends Activity{
 	private int mHeight;
 	
 	private TextView tv_bottom , tv_top;
+	
+	//自定义双击事件
+	private long mHits [] = new long[2];
 
 
 	@Override
@@ -77,6 +82,34 @@ public class DragViewActivity extends Activity{
 		params.leftMargin = lastX;
 		params.topMargin = lastY;
 		iv_drag_view.setLayoutParams(params);
+		
+//***********************************************************************************
+		//双击居中
+		iv_drag_view.setOnClickListener(new OnClickListener( ) {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				System.out.println("点击了");
+				System.arraycopy(mHits, 1, mHits, 0, mHits.length - 1);
+				mHits[mHits.length - 1] = SystemClock.uptimeMillis();
+				if (mHits[0] >= (SystemClock.uptimeMillis() - 500)) {
+					//双击居中
+					//屏幕宽度的一半减去控件宽度的一半，得到控件左上角坐标位置的横坐标x
+					//左上角坐标位置的纵坐标y不变
+					//屏幕宽度的一半加上控件宽度的一半，得到控件右下角坐标位置的横坐标x
+					//右下角坐标位置的纵坐标y不变
+					iv_drag_view.layout(mWidth / 2 - iv_drag_view.getWidth() / 2, iv_drag_view.getTop(),
+							mWidth / 2 + iv_drag_view.getWidth() / 2, iv_drag_view.getBottom());
+					saveData();//保存坐标
+				}
+			}
+		});
+		
+		/**
+		 * 在Activity中，对一个空间，如果只设置触摸事件，触摸事件必须返回true，否则不起作用；
+		 * 如果同时需要设置了点击事件，这时，需要把触摸事件的返回值更改为false，否则点击事件得不到处理
+		 * */
 		
 		//设置触摸事件
 		iv_drag_view.setOnTouchListener(new OnTouchListener() {
@@ -137,11 +170,7 @@ public class DragViewActivity extends Activity{
 
 				case MotionEvent.ACTION_UP://手指离开屏幕
 					Log.e(TAG, "手指离开屏幕");
-					Editor editor = sp.edit();
-					//保存左上角的坐标位置
-					editor.putInt("lastX", iv_drag_view.getLeft());
-					editor.putInt("lastY", iv_drag_view.getTop());
-					editor.commit();
+					saveData();
 
 					Log.e(TAG, "保存的坐标(" + iv_drag_view.getLeft() + "," + iv_drag_view.getTop() + ")");
 					break;
@@ -150,7 +179,8 @@ public class DragViewActivity extends Activity{
 					break;
 				}
 
-				return true;
+//				return true;
+				return false;
 			}
 		});
 	}
@@ -171,6 +201,15 @@ public class DragViewActivity extends Activity{
 			}
 		}
 		return statusBarHeight;
+	}
+//	****************************************************************
+	//
+	private void saveData() {
+		Editor editor = sp.edit();
+		//保存左上角的坐标位置
+		editor.putInt("lastX", iv_drag_view.getLeft());
+		editor.putInt("lastY", iv_drag_view.getTop());
+		editor.commit();
 	}
 	
 	
