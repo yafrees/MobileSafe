@@ -150,8 +150,6 @@ public class DragViewActivity extends Activity{
 					break;
 				}
 
-
-
 				return true;
 			}
 		});

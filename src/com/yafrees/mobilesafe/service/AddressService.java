@@ -13,6 +13,7 @@ import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -120,7 +121,7 @@ public class AddressService extends Service{
 	
 //************************************************************
 	/**
-	 * 自定义Toast
+	 * 自定义Toast（显示号码归属地）
 	 * */
 	public void myToast(String address) {
 //		view = new TextView(this);
@@ -136,11 +137,21 @@ public class AddressService extends Service{
 //		{"半透明" , "活力橙" , "卫士蓝" , "金属灰" , "苹果绿"};
 		int ids [] = {R.drawable.call_locate_white , R.drawable.call_locate_orange , R.drawable.call_locate_blue , 
 				R.drawable.call_locate_gray , R.drawable.call_locate_green};
+		
+		//得到DragViewActivity中保存的位置
+		int lastX = sp.getInt("lastX", 0);
+		int lastY = sp.getInt("lastY", 0);
+		
 		//根据设置中心的设置值，动态设置自定义Toast的背景
 		view.setBackgroundResource(ids[which_choice]);
 		
-		
 		WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+		
+		//码号归属地显示对话框显示在制定的位置
+		params.gravity = Gravity.TOP + Gravity.LEFT;
+		params.x = lastX;
+		params.y = lastY;
+		
 		params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.format = PixelFormat.TRANSLUCENT;
