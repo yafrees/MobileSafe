@@ -2,19 +2,22 @@ package com.yafrees.mobilesafe.service;
 
 import com.yafrees.mobilesafe.R;
 import com.yafrees.mobilesafe.db.dao.NumberAddressQueryDao;
+
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.SharedPreferences.Editor;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -38,6 +41,8 @@ public class AddressService extends Service{
 	
 	//
 	private SharedPreferences sp;
+	
+	WindowManager.LayoutParams params ;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -145,7 +150,73 @@ public class AddressService extends Service{
 		//根据设置中心的设置值，动态设置自定义Toast的背景
 		view.setBackgroundResource(ids[which_choice]);
 		
-		WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+//		**********************************************************************************
+		view.setOnTouchListener(new OnTouchListener() {
+			
+			int startX = 0;
+			int startY = 0;
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+//				System.out.println("触摸了...");
+				
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					//1.记录第一次按下
+					startX = (int) event.getRawX();
+					startY = (int) event.getRawY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					//2.移动，来到新的坐标
+					int newX = (int) event.getRawX();
+					int newY = (int) event.getRawY();
+					//3.计算偏移量
+					int dX = newX - startX;
+					int dY = newY - startY;
+					
+					//4.根据偏移量更新控件的位置
+					params.x += dX;
+					params.y += dY;
+					//屏蔽打电话界面的非法拖动。
+					if (params.x < 0) {
+						params.x = 0;
+					}
+					if (params.y < 0) {
+						params.y = 0;
+					}
+					if (params.x > wm.getDefaultDisplay().getWidth() - view.getWidth()) {
+						params.x = wm.getDefaultDisplay().getWidth() - view.getWidth();
+					}
+					if (params.y > wm.getDefaultDisplay().getHeight()- view.getHeight()) {
+						params.y = wm.getDefaultDisplay().getHeight() - view.getHeight();
+					}
+					wm.updateViewLayout(view, params);
+					
+					//5.重新记录开始坐标
+					startX = (int) event.getRawX();
+					startY = (int) event.getRawY();
+					
+					break;
+				case MotionEvent.ACTION_UP:
+					//保存坐标
+					Editor editor = sp.edit();
+					editor.putInt("lastX", params.x);
+					editor.putInt("lastY", params.y);
+					editor.commit();
+
+					break;
+
+				default:
+					break;
+				}
+				
+				return true;
+			}
+		});
+		
+//		**********************************************************************************
+		
+		params = new WindowManager.LayoutParams();
 		
 		//码号归属地显示对话框显示在制定的位置
 		params.gravity = Gravity.TOP + Gravity.LEFT;
@@ -155,7 +226,7 @@ public class AddressService extends Service{
 		params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.format = PixelFormat.TRANSLUCENT;
-        params.type = WindowManager.LayoutParams.TYPE_TOAST;
+        params.type = WindowManager.LayoutParams.TYPE_PRIORITY_PHONE;
         params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 /*| WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE*/;
